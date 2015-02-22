@@ -1,4 +1,7 @@
+import Ember from 'ember';
 import DS    from 'ember-data';
+
+var RSVP = Ember.RSVP;
 
 export default DS.Adapter.extend({
 
@@ -8,7 +11,16 @@ export default DS.Adapter.extend({
   },
 
   find: function(store, type, id, record) {
-    return this.get('remote').find(store, type, id, record);
+    var adapter = this;
+
+    return adapter.get('remote').find(store, type, id, record)
+      .catch(function(error) {
+        if(remoteIsDead(error.status)) {
+          return adapter.get('local').find(store, type, id, record);
+        } else {
+          return RSVP.reject(error);
+        }
+      });
   },
 
   createRecord: function(store, type, record) {
@@ -24,7 +36,16 @@ export default DS.Adapter.extend({
   },
 
   findAll: function(store, type, sinceToken) {
-    return this.get('remote').findAll(store, type, sinceToken);
+    var adapter = this;
+
+    return adapter.get('remote').findAll(store, type, sinceToken)
+      .catch(function(error) {
+        if(remoteIsDead(error.status)) {
+          return adapter.get('local').findAll(store, type, sinceToken);
+        } else {
+          return RSVP.reject(error);
+        }
+      });
   },
 
   findQuery: function(store, type, query) {
@@ -34,3 +55,7 @@ export default DS.Adapter.extend({
   coalesceFindRequests: false,
   defaultSerializer: false
 });
+
+function remoteIsDead(status) {
+  return status === 0;
+}
