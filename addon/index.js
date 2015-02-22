@@ -1,4 +1,4 @@
-import Adapter  from './adapters/sync-adapter';
+import Adapter  from './adapter';
 
 export default {
   Adapter: Adapter,
