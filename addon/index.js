@@ -1,6 +1,6 @@
-import SyncAdapter  from './adapters/sync-adapter';
+import Adapter  from './adapters/sync-adapter';
 
 export default {
-  SyncAdapter: SyncAdapter,
+  Adapter: Adapter,
 };
 
