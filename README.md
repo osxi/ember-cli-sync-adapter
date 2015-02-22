@@ -1,25 +1,5 @@
 # Ember-cli-sync-adapter
+Ember-cli-sync-adapter(SyncAdapter) is an adapter that wraps a local and a remote adapter by your choice. SyncAdapter will use the remote adapter when online and use the local adapter when offline. SyncAdapter will sync the local and remote adapter by performing queued operations accumulated during off-line mode.
 
-This README outlines the details of collaborating on this Ember addon.
-
-## Installation
-
-* `git clone` this repository
-* `npm install`
-* `bower install`
-
-## Running
-
-* `ember server`
-* Visit your app at http://localhost:4200.
-
-## Running Tests
-
-* `ember test`
-* `ember test --server`
-
-## Building
-
-* `ember build`
-
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+SyncAdapter assumes that there would be no conflicts when executing the
+operations in the queue.
