@@ -8,8 +8,12 @@ export default DS.Adapter.extend({
   init: function() {
     this.set('remoteAdapter',    this.get('remoteAdapter').create());
     this.set('localAdapter',     this.get('localAdapter').create());
+
+    // TODO: check if we can use get('defaultSerializer') to get serializer
     this.set('remoteSerializer', this.get('remoteSerializer').create());
     this.set('localSerializer',  this.get('localSerializer').create());
+    this.set('defaultSerializer',
+             this.get('remoteAdapter').get('defaultSerializer'));
   },
 
   find: function(store, type, id, record) {

@@ -6,16 +6,13 @@ import LFAdapter    from 'ember-localforage-adapter/adapters/localforage';
 import LFSerializer from 'ember-localforage-adapter/serializers/localforage';
 
 export default Sync.Adapter.extend({
-  // IMPORTANT! Delete this and make it work
-  defaultSerializer: '-rest',
-
   remoteAdapter: DS.RESTAdapter.extend({
     host: ENV.host,
     namespace: 'api'
   }),
   localAdapter: LFAdapter,
 
-  // TODO: use adapter name to get serializer name
+  // TODO: use defaultSerializer to get serializer
   remoteSerializer: DS.RESTSerializer,
   localSerializer:  LFSerializer,
 });
