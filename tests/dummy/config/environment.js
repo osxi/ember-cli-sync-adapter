@@ -1,7 +1,7 @@
 /* jshint node: true */
 
 module.exports = function(environment) {
-  var host = 'http://no-such-thing';
+  var host = 'http://localhost:4200';
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,

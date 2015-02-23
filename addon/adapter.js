@@ -35,10 +35,17 @@ export default DS.Adapter.extend({
     return this.get('remote').deleteRecord(store, type, record);
   },
 
+  /**
+   * Whenever we call findAll, we reload local data using the remote ones
+   */
   findAll: function(store, type, sinceToken) {
     var adapter = this;
 
     return adapter.get('remote').findAll(store, type, sinceToken)
+      .then(function(records) {
+        // TODO: save to local
+        return records;
+      })
       .catch(function(error) {
         if(remoteIsDead(error.status)) {
           return adapter.get('local').findAll(store, type, sinceToken);
