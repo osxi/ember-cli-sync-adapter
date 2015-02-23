@@ -1,6 +1,7 @@
 /* jshint node: true */
 
 module.exports = function(environment) {
+  var host = 'http://no-such-thing';
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,
@@ -17,11 +18,12 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
     },
+    host: host,
     contentSecurityPolicy: {
       'default-src': "'none'",
-      'script-src': "'self' http://no-such-thing",
+      'script-src': "'self' " + host,
       'font-src': "'self'",
-      'connect-src': "'self' http://no-such-thing",
+      'connect-src': "'self' " + host,
       'img-src': "'self'",
       'style-src': "'self'",
       'media-src': "'self'"
