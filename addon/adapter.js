@@ -6,17 +6,19 @@ var RSVP = Ember.RSVP;
 export default DS.Adapter.extend({
 
   init: function() {
-    this.set('local', this.get('localAdapter').create());
-    this.set('remote', this.get('remoteAdapter').create());
+    this.set('remoteAdapter',    this.get('remoteAdapter').create());
+    this.set('localAdapter',     this.get('localAdapter').create());
+    this.set('remoteSerializer', this.get('remoteSerializer').create());
+    this.set('localSerializer',  this.get('localSerializer').create());
   },
 
   find: function(store, type, id, record) {
     var adapter = this;
 
-    return adapter.get('remote').find(store, type, id, record)
+    return adapter.get('remoteAdapter').find(store, type, id, record)
       .catch(function(error) {
         if(remoteIsDead(error.status)) {
-          return adapter.get('local').find(store, type, id, record);
+          return adapter.get('localAdapter').find(store, type, id, record);
         } else {
           return RSVP.reject(error);
         }
@@ -24,15 +26,15 @@ export default DS.Adapter.extend({
   },
 
   createRecord: function(store, type, record) {
-    return this.get('remote').createRecord(store, type, record);
+    return this.get('remoteAdapter').createRecord(store, type, record);
   },
 
   updateRecord: function(store, type, record) {
-    return this.get('remote').updateRecord(store, type, record);
+    return this.get('remoteAdapter').updateRecord(store, type, record);
   },
 
   deleteRecord: function(store, type, record) {
-    return this.get('remote').deleteRecord(store, type, record);
+    return this.get('remoteAdapter').deleteRecord(store, type, record);
   },
 
   /**
@@ -41,14 +43,20 @@ export default DS.Adapter.extend({
   findAll: function(store, type, sinceToken) {
     var adapter = this;
 
-    return adapter.get('remote').findAll(store, type, sinceToken)
-      .then(function(records) {
+    return adapter.get('remoteAdapter').findAll(store, type, sinceToken)
+      .then(function(payload) {
         // TODO: save to local
-        return records;
+        var remoteSerializer = adapter.get('remoteSerializer');
+        console.log(payload);
+        // payload.users.forEach(function(data) {
+        //   var record = this
+        //   adapter.get('localAdapter').createRecord(store, type, data);
+        // });
+        return payload;
       })
       .catch(function(error) {
         if(remoteIsDead(error.status)) {
-          return adapter.get('local').findAll(store, type, sinceToken);
+          return adapter.get('localAdapter').findAll(store, type, sinceToken);
         } else {
           return RSVP.reject(error);
         }
@@ -56,7 +64,7 @@ export default DS.Adapter.extend({
   },
 
   findQuery: function(store, type, query) {
-    return this.get('remote').findQuery(store, type, query);
+    return this.get('remoteAdapter').findQuery(store, type, query);
   },
 
   coalesceFindRequests: false,
