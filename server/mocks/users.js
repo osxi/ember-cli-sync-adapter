@@ -3,11 +3,12 @@ module.exports = function(app) {
   var usersRouter = express.Router();
 
   usersRouter.get('/', function(req, res) {
+    // To mimic connection error;
+    res.status(0).end();
     res.send({
       'users': [
-        {id: 1, name: 'Remote-Chun'},
-        {id: 2, name: 'Remote-John'},
-        {id: 3, name: 'Remote-Daniel'},
+        {id: 4, name: 'Remote-Zach'},
+        {id: 5, name: 'Remote-Leon'},
       ]
     });
   });

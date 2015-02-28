@@ -1,5 +1,8 @@
 import Ember from 'ember';
 import DS    from 'ember-data';
+import LocalStore from '../stores/local-store';
+
+import findAll from '../methods/find-all';
 
 var RSVP = Ember.RSVP;
 
@@ -9,11 +12,23 @@ export default DS.Adapter.extend({
     this.set('remoteAdapter',    this.get('remoteAdapter').create());
     this.set('localAdapter',     this.get('localAdapter').create());
 
-    // TODO: check if we can use get('defaultSerializer') to get serializer
     this.set('remoteSerializer', this.get('remoteSerializer').create());
     this.set('localSerializer',  this.get('localSerializer').create());
-    this.set('defaultSerializer',
-             this.get('remoteAdapter').get('defaultSerializer'));
+
+    this.set('remoteDefaultSerializer',
+             this.get('remoteAdapter.defaultSerializer'));
+    this.set('localDefaultSerializer',
+             this.get('localAdapter.defaultSerializer'));
+    this.set('defaultSerializer', this.get('remoteDefaultSerializer'));
+
+    // this.set('remoteStore', DS.Store.extend().create());
+    var localStore = LocalStore
+      .extend({
+        adapter:   this.get('localAdapter'),
+        container: this.get('container')
+      })
+      .create();
+    this.set('localStore', localStore);
   },
 
   find: function(store, type, id, record) {
@@ -44,37 +59,32 @@ export default DS.Adapter.extend({
   /**
    * Whenever we call findAll, we reload local data using the remote ones
    */
-  findAll: function(store, type, sinceToken) {
-    var adapter = this;
-
-    return adapter.get('remoteAdapter').findAll(store, type, sinceToken)
-      .then(function(payload) {
-        // TODO: save to local
-        var remoteSerializer = adapter.get('remoteSerializer');
-        console.log(payload);
-        // payload.users.forEach(function(data) {
-        //   var record = this
-        //   adapter.get('localAdapter').createRecord(store, type, data);
-        // });
-        return payload;
-      })
-      .catch(function(error) {
-        if(remoteIsDead(error.status)) {
-          return adapter.get('localAdapter').findAll(store, type, sinceToken);
-        } else {
-          return RSVP.reject(error);
-        }
-      });
-  },
+  findAll: findAll,
 
   findQuery: function(store, type, query) {
     return this.get('remoteAdapter').findQuery(store, type, query);
   },
 
+  /**
+   * change default serializer
+   * @param type {'local' | 'remote'}
+   */
+  changeSerializerTo: function(type) {
+    this.set('defaultSerializer', this.get(type + 'DefaultSerializer'));
+  },
   coalesceFindRequests: false,
-  defaultSerializer: false
-});
+  defaultSerializer: false,
 
-function remoteIsDead(status) {
-  return status === 0;
-}
+  // A computed property?
+  // serializer: function(record, options) {
+  //   // READ: function ember$data$lib$system$store$$_findAll
+  //   // This changed something! The error message is changed.
+  //   debugger;
+  //   return this._super(record, options);
+  // },
+
+  serialize: function(record, options) {
+    // This is not called
+    return this._super(record, options);
+  }
+});

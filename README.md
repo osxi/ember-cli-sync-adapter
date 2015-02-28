@@ -6,3 +6,6 @@ Ember-cli-sync-adapter(SA) is an adapter that wraps a local and a remote adapter
 
 SA assumes that there would be no conflicts when executing the
 operations in the queue.
+
+# TODO
+1. overwrite Ember Data store#\_findAll method.
