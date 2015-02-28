@@ -8,4 +8,13 @@ SA assumes that there would be no conflicts when executing the
 operations in the queue.
 
 # TODO
-1. overwrite Ember Data store#\_findAll method.
+1. clean up init, use as less input as possible
+2. #find
+3. #findQuery
+4. #createRecord
+5. #updateRecord
+6. #deleteRecord
+7. Add a service to:
+  1. save local operations in offline mode into a queue
+  2. try to push the queue to the server when online (maybe periodically)
+  3. fetch remote data when online (maybe periodically)
