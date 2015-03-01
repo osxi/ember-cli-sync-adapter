@@ -37,7 +37,7 @@ describe('Acceptance: FindAll', function() {
 
     andThen(function() {
       expect(currentPath()).to.equal('find-all');
-      expect($('#find-all ul li').length).to.equal(count);
+      expect(find('#find-all ul li').length).to.equal(count);
     });
 
     andThen(function() {
@@ -61,7 +61,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(count);
+      expect(find('#find-all ul li').length).to.equal(count);
     });
 
     // Offline
@@ -78,7 +78,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(count);
+      expect(find('#find-all ul li').length).to.equal(count);
     });
 
     andThen(function() {
@@ -107,7 +107,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(firstCount);
+      expect(find('#find-all ul li').length).to.equal(firstCount);
     });
 
     // Offline
@@ -124,7 +124,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(firstCount);
+      expect(find('#find-all ul li').length).to.equal(firstCount);
     });
 
     // ---------- Second round
@@ -142,7 +142,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(secondCount);
+      expect(find('#find-all ul li').length).to.equal(secondCount);
     });
 
     // Offline
@@ -159,7 +159,7 @@ describe('Acceptance: FindAll', function() {
     visit('/find-all');
 
     andThen(function() {
-      expect($('#find-all ul li').length).to.equal(secondCount);
+      expect(find('#find-all ul li').length).to.equal(secondCount);
     });
 
     andThen(function() {
