@@ -17,10 +17,9 @@ SA assumes that there would be no conflicts when executing the
 operations in the queue.
 
 # TODO
-1. write tests
 1. <del>clean up init, use as less input as possible</del>
 1. <del>#findAll</del>
-1. #find
+1. <del>#find</del>
 1. #findQuery
 1. #createRecord
 1. #updateRecord

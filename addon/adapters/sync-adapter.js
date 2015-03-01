@@ -2,6 +2,7 @@ import DS    from 'ember-data';
 import LocalStore from '../stores/local-store';
 
 import findAll from './sync-adapter/find-all';
+import find    from './sync-adapter/find';
 
 export default DS.Adapter.extend({
 
@@ -20,8 +21,12 @@ export default DS.Adapter.extend({
     this.set('defaultSerializer',       remoteDefaultSerializer);
 
     // serializers are objects
-    this.set('remoteSerializer', this.get('remoteSerializer').create());
-    this.set('localSerializer',  this.get('localSerializer').create());
+    this.set('remoteSerializer', this.get('remoteSerializer').create({
+      container: this.get('container')
+    }));
+    this.set('localSerializer',  this.get('localSerializer').create({
+      container: this.get('container')
+    }));
 
     // This is used to dispose useless records
     var localStore = LocalStore
@@ -33,9 +38,7 @@ export default DS.Adapter.extend({
     this.set('localStore', localStore);
   },
 
-  find: function(store, type, id, record) {
-    return this.get('remoteAdapter').find(store, type, id, record);
-  },
+  find: find,
 
   createRecord: function(store, type, record) {
     return this.get('remoteAdapter').createRecord(store, type, record);
@@ -49,9 +52,6 @@ export default DS.Adapter.extend({
     return this.get('remoteAdapter').deleteRecord(store, type, record);
   },
 
-  /**
-   * Whenever we call findAll, we reload local data using the remote ones
-   */
   findAll: findAll,
 
   findQuery: function(store, type, query) {

@@ -9,10 +9,11 @@ import {
 import { expect } from 'chai';
 import Ember from 'ember';
 import startApp from '../helpers/start-app';
+import { setHeaders } from '../helpers/async-helpers';
 
 var App;
 
-describe('Acceptance: FindAll', function() {
+describe('Acceptance: FindAll ', function() {
   beforeEach(function() {
     App = startApp();
   });
@@ -24,14 +25,7 @@ describe('Acceptance: FindAll', function() {
   it('show users when online', function(done) {
     var count = 4;
 
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": true,
-          "usersCount": count
-        }
-      });
-    });
+    setHeaders({ "isOnline": true, "usersCount": count });
 
     visit('/find-all');
 
@@ -49,14 +43,7 @@ describe('Acceptance: FindAll', function() {
     var count = 4;
 
     // Online
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": true,
-          "usersCount": count
-        }
-      });
-    });
+    setHeaders({ "isOnline": true, "usersCount": count });
 
     visit('/find-all');
 
@@ -65,14 +52,7 @@ describe('Acceptance: FindAll', function() {
     });
 
     // Offline
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": false,
-          "usersCount": count
-        }
-      });
-    });
+    setHeaders({ "isOnline": false, "usersCount": count });
 
     visit('/');
     visit('/find-all');
@@ -94,14 +74,7 @@ describe('Acceptance: FindAll', function() {
 
     // ---------- First round
     // Online
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": true,
-          "usersCount": firstCount
-        }
-      });
-    });
+    setHeaders({ "isOnline": true, "usersCount": firstCount });
 
     visit('/');
     visit('/find-all');
@@ -111,14 +84,7 @@ describe('Acceptance: FindAll', function() {
     });
 
     // Offline
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": false,
-          "usersCount": firstCount
-        }
-      });
-    });
+    setHeaders({ "isOnline": false, "usersCount": firstCount });
 
     visit('/');
     visit('/find-all');
@@ -129,14 +95,7 @@ describe('Acceptance: FindAll', function() {
 
     // ---------- Second round
     // Online again, count changed
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": true,
-          "usersCount": secondCount
-        }
-      });
-    });
+    setHeaders({ "isOnline": true, "usersCount": secondCount });
 
     visit('/');
     visit('/find-all');
@@ -146,14 +105,7 @@ describe('Acceptance: FindAll', function() {
     });
 
     // Offline
-    andThen(function() {
-      $.ajaxSetup({
-        headers: {
-          "isOnline": false,
-          "usersCount": secondCount
-        }
-      });
-    });
+    setHeaders({ "isOnline": false, "usersCount": secondCount });
 
     visit('/');
     visit('/find-all');

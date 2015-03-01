@@ -7,6 +7,7 @@ var Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('find-all');
+  this.route('find');
 });
 
 export default Router;

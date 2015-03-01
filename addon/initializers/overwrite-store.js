@@ -15,6 +15,7 @@ var promiseArray = function(promise, label) {
 export function initialize(container /* , application */) {
   var store = container.lookup('store:main');
   store.set('_fetchAll', _fetchAll);
+  store.set('fetchRecord', fetchRecord);
 }
 
 export default {
@@ -36,6 +37,7 @@ function _fetchAll(type, array) {
   return promiseArray(_findAll(adapter, this, type, sinceToken));
 }
 
+// _fetchAll BEGIN
 function _findAll(adapter, store, type, sinceToken) {
   var promise = adapter.findAll(store, type, sinceToken);
   // Diff line deleted
@@ -110,3 +112,48 @@ function _objectIsAlive(object) {
 function _adapterRun(store, fn) {
   return store._backburner.run(fn);
 }
+// _fetchAll END
+
+// fetchRecord BEGIN
+// https://github.com/emberjs/data/blob/v1.0.0-beta.15/packages/ember-data/lib/system/store.js#L623
+function fetchRecord(record) {
+  var type = record.constructor;
+  var id = get(record, 'id');
+  var adapter = this.adapterFor(type);
+
+  Ember.assert("You tried to find a record but you have no adapter (for " + type + ")", adapter);
+  Ember.assert("You tried to find a record but your adapter (for " + type + ") does not implement 'find'", typeof adapter.find === 'function');
+
+  var promise = _find(adapter, this, type, id, record);
+  return promise;
+}
+
+function _find(adapter, store, type, id, record) {
+  var promise = adapter.find(store, type, id, record);
+  // Diff line deleted
+  var label = "DS: Handle Adapter#find of " + type + " with id: " + id;
+
+  promise = Promise.cast(promise, label);
+  promise = _guard(promise, _bind(_objectIsAlive, store));
+
+  return promise.then(function(adapterPayload) {
+    Ember.assert("You made a request for a " + type.typeKey + " with id " + id + ", but the adapter's response did not have any data", adapterPayload);
+    return _adapterRun(store, function() {
+      // Diff line added
+      var serializer = serializerForAdapter(adapter, type);
+      var payload = serializer.extract(store, type, adapterPayload, id, 'find');
+
+      return store.push(type, payload);
+    });
+  }, function(error) {
+    var record = store.getById(type, id);
+    if (record) {
+      record.notFound();
+      if (get(record, 'isEmpty')) {
+        store.unloadRecord(record);
+      }
+    }
+    throw error;
+  }, "DS: Extract payload of '" + type + "'");
+}
+// fetchRecord END
