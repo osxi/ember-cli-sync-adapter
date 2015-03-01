@@ -66,12 +66,6 @@ export default function findAll(store, type, sinceToken) {
   function createRecordInLocal(rawRecord) {
     var record = createRecordWithId(type, rawRecord.id);
 
-    // var record = type._create({
-    //   id:        rawRecord.id,
-    //   store:     adapter.get('localStore'),
-    //   container: adapter.get('container'),
-    // });
-
     record.setupData(rawRecord);
 
     adapter.get('localAdapter').createRecord(store, type, record);
