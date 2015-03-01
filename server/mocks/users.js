@@ -7,8 +7,9 @@ module.exports = function(app) {
     res.status(0).end();
     res.send({
       'users': [
-        {id: 4, name: 'Remote-Zach'},
-        {id: 5, name: 'Remote-Leon'},
+        {id: 1, name: 'Trent'},
+        {id: 4, name: 'Rich'},
+        {id: 5, name: 'John'},
       ]
     });
   });

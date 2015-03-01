@@ -13,7 +13,6 @@ export default SyncAdapter.extend({
   }),
   localAdapter: LFAdapter,
 
-  // TODO: use defaultSerializer to get serializer
   remoteSerializer: DS.RESTSerializer,
   localSerializer:  LFSerializer,
 });

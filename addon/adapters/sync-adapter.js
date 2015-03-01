@@ -1,27 +1,29 @@
-import Ember from 'ember';
 import DS    from 'ember-data';
 import LocalStore from '../stores/local-store';
 
-import findAll from '../methods/find-all';
-
-var RSVP = Ember.RSVP;
+import findAll from './sync-adapter/find-all';
 
 export default DS.Adapter.extend({
 
   init: function() {
+    var remoteDefaultSerializer, localDefaultSerializer;
+
+    // initialize adapters
     this.set('remoteAdapter',    this.get('remoteAdapter').create());
     this.set('localAdapter',     this.get('localAdapter').create());
 
+    // defaultSerializers are strings
+    remoteDefaultSerializer = this.get('remoteAdapter.defaultSerializer');
+    localDefaultSerializer  = this.get('localAdapter.defaultSerializer');
+    this.set('remoteDefaultSerializer', remoteDefaultSerializer);
+    this.set('localDefaultSerializer',  localDefaultSerializer);
+    this.set('defaultSerializer',       remoteDefaultSerializer);
+
+    // serializers are objects
     this.set('remoteSerializer', this.get('remoteSerializer').create());
     this.set('localSerializer',  this.get('localSerializer').create());
 
-    this.set('remoteDefaultSerializer',
-             this.get('remoteAdapter.defaultSerializer'));
-    this.set('localDefaultSerializer',
-             this.get('localAdapter.defaultSerializer'));
-    this.set('defaultSerializer', this.get('remoteDefaultSerializer'));
-
-    // this.set('remoteStore', DS.Store.extend().create());
+    // This is used to dispose useless records
     var localStore = LocalStore
       .extend({
         adapter:   this.get('localAdapter'),
@@ -32,16 +34,7 @@ export default DS.Adapter.extend({
   },
 
   find: function(store, type, id, record) {
-    var adapter = this;
-
-    return adapter.get('remoteAdapter').find(store, type, id, record)
-      .catch(function(error) {
-        if(remoteIsDead(error.status)) {
-          return adapter.get('localAdapter').find(store, type, id, record);
-        } else {
-          return RSVP.reject(error);
-        }
-      });
+    return this.get('remoteAdapter').find(store, type, id, record);
   },
 
   createRecord: function(store, type, record) {
@@ -67,22 +60,14 @@ export default DS.Adapter.extend({
 
   /**
    * change default serializer
-   * @param type {'local' | 'remote'}
+   * @param source {'local' | 'remote'}
    */
-  changeSerializerTo: function(type) {
-    this.set('defaultSerializer', this.get(type + 'DefaultSerializer'));
+  changeSerializerTo: function(source) {
+    this.set('defaultSerializer', this.get(source + 'DefaultSerializer'));
   },
-  coalesceFindRequests: false,
   defaultSerializer: false,
 
-  // A computed property?
-  // serializer: function(record, options) {
-  //   // READ: function ember$data$lib$system$store$$_findAll
-  //   // This changed something! The error message is changed.
-  //   debugger;
-  //   return this._super(record, options);
-  // },
-
+  coalesceFindRequests: false,
   serialize: function(record, options) {
     // This is not called
     return this._super(record, options);

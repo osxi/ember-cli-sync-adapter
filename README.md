@@ -3,8 +3,10 @@ Make any ember app that use ember data offline by:
 ```javascript
 // app/adapters/application.js
 export default SyncAdapter.extend({
-  remoteAdapter: DS.RESTAdapter,
-  localAdapter:  LFAdapter
+  remoteAdapter:    DS.RESTAdapter,
+  localAdapter:     LFAdapter,
+  remoteSerializer: DS.RESTSerializer,
+  localSerializer:  LFSerializer,
 });
 ```
 
