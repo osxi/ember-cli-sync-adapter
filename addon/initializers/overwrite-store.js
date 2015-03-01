@@ -12,7 +12,7 @@ var promiseArray = function(promise, label) {
   });
 };
 
-export function initialize(container, application) {
+export function initialize(container /* , application */) {
   var store = container.lookup('store:main');
   store.set('_fetchAll', _fetchAll);
 }
