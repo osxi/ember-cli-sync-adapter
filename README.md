@@ -17,17 +17,18 @@ SA assumes that there would be no conflicts when executing the
 operations in the queue.
 
 # TODO
-1. clean up init, use as less input as possible
-2. #find
-3. #findQuery
-4. #createRecord
-5. #updateRecord
-6. #deleteRecord
-7. Add a service to:
+1. write tests
+1. <del>clean up init, use as less input as possible</del>
+1. <del>#findAll</del>
+1. #find
+1. #findQuery
+1. #createRecord
+1. #updateRecord
+1. #deleteRecord
+1. Add a service to:
   1. save local operations in offline mode into a queue
   2. try to push the queue to the server when online (maybe periodically)
   3. fetch remote data when online (maybe periodically)
-8. write tests
 
 # Resources
 1. [ember cli addon] (http://www.ember-cli.com/#developing-addons-and-blueprints)
