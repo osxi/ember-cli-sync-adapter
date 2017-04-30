@@ -1,4 +1,6 @@
 # Goal:
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/osxi/ember-cli-sync-adapter.svg)](https://greenkeeper.io/)
 Make any ember app that use ember data offline by:
 ```javascript
 // app/adapters/application.js
